@@ -1,0 +1,104 @@
+﻿
+@{
+    ViewBag.Title = "FindFloor";
+    Layout = "~/Areas/Admin/Views/Shared/LayoutAdmin.cshtml";
+}
+
+@model IEnumerable<QLKS.Models.db_Room>
+<style>
+
+    .room {
+        width: 100px;
+        height: 100px;
+        margin: 5px;
+        border: 2px solid #ccc;
+        display: inline-flex;
+        align-items: center;
+        text-align: center;
+        justify-content: center;
+        font-size: 14px;
+        font-weight: bold;
+        border-radius: 13px;
+        transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
+        cursor: pointer;
+    }
+
+    .occupied {
+        color: white;
+    }
+
+    .room:hover {
+        transform: scale(1.1);
+        filter: brightness(1.2);
+    }
+
+    .c {
+        margin: 10px 10px 10px 0px;
+    }
+
+    .d {
+        text-align: center;
+    }
+</style>
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Sơ Đồ Phòng</h1>
+            </div>
+            <div class="col-sm-6">
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+<section class="content">
+    <div class="row">
+        <div class="col-lg-2 col-sm-4">
+            <div class="dropdown c">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Chọn Theo Tầng
+                </button>
+                @Html.Action("ListFloor", "RoomDiagram")
+            </div>
+        </div>
+
+        <div class="col-lg-2 col-sm-4">
+            <div class="dropdown c">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Chọn Theo Loại Phòng
+                </button>
+                @Html.Action("ListTypeRoom", "RoomDiagram")
+            </div>
+        </div>
+    </div>
+    <!-- Đóng row ở đây -->
+    <!-- Default box -->
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Danh sách phòng</h3>
+        </div>
+        <div class="card-body">
+            <div class="card-body">
+                @foreach (var room in Model.OrderBy(r => r.db_Floor.Floor))
+                {
+                    if (room.RoomStatus == 0)
+                    {
+                        <a href="@Url.Action("SelectRooms", "RoomDiagram", new { id = room.RoomID })" class="room" style="background-color: @(room.RoomStatus == 0 ? "#e74c3c" : "#34db7a");" onclick="checkRoomColor(event, @room.RoomStatus)">
+                            @room.RoomNumber <br />
+                            @room.db_Floor.Floor
+                        </a>
+                    }
+                    else
+                    {
+                        <a href="@Url.Action("SelectRoomsEmpty", "RoomDiagram", new { id = room.RoomID })" class="room" style="background-color: @(room.RoomStatus == 0 ? "#e74c3c" : "#34db7a");" onclick="checkRoomColor(event, @room.RoomStatus)">
+                            @room.RoomNumber <br />
+                            @room.db_Floor.Floor
+                        </a>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</section>

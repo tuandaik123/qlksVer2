@@ -1,0 +1,79 @@
+﻿
+<style>
+    body {
+        font-family: Roboto, sans-serif;
+        background-image: url('https://th.bing.com/th/id/R.9c9e29d614dbee9696446a1837a366aa?rik=jB671YgpbEEVKg&riu=http%3a%2f%2fmediawinwin.vn%2fcosy%2fadmin%2fupload%2fimages%2f%E1%BA%A2nh+N%E1%BB%99i+Th%E1%BA%A5t%2f%E1%BA%A3nh+n%E1%BB%99i+th%E1%BA%A5t+14.jpg&ehk=NixYPvB4jaU8fIR7StVmUvtE0ceZ5ojIgiPaHwDdELQ%3d&risl=&pid=ImgRaw&r=0');
+    }
+
+    .container {
+        width: 800px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #fff;
+        box-shadow: -10px 10px 10px 10px rgba(0, 0, 0, 0.5);
+        border-radius: 20px;
+    }
+
+    .header {
+        text-align: center;
+        background-color: @ViewBag.color;
+        color: #fff;
+        font-size: 50px;
+        font-weight: bold;
+        font-family: 'Times New Roman', Times, serif;
+    }
+
+    .content {
+        padding: 25px;
+        font-size: 25px;
+        font-family:'Times New Roman';
+        text-align: center;
+    }
+
+    .paragraph {
+        margin-bottom: 10px;
+    }
+
+    .footer {
+        text-align: center;
+        background-color: @ViewBag.color;
+        color: #fff;
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+    .button {
+        background-color: @ViewBag.color;
+        color: #fff;
+        font-size: 18px;
+        font-weight: bold;
+        padding: 10px 20px;
+        border: none;
+        cursor: pointer;
+        text-decoration: none;
+        border-radius: 20%;
+    }
+
+        .button:hover {
+            background-color: #fff;
+            color: @ViewBag.color;
+        }
+</style>
+<div class="container">
+    <div class="header">
+        <img src="@ViewBag.icon" alt="Logo" width="200" height="200">
+        <h1 class="heading">@ViewBag.Msg</h1>
+    </div>
+    <div class="content">
+        <p class="paragraph"></p>
+        <p class="paragraph">@ViewBag.IDweb</p>
+        <p class="paragraph">@ViewBag.SymbolsPayment</p>
+        <p class="paragraph">@ViewBag.SymbolsVNPAY</p>
+        <p class="paragraph">@ViewBag.totalPrice</p>
+        <p class="paragraph">@ViewBag.bank</p>
+
+    </div>
+    <div class="footer">
+        <a class="button" href="@Url.Action("Index","NoiThatOnline")">Trang chủ</a>
+    </div>
+</div>

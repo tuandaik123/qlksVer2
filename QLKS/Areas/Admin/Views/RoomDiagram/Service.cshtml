@@ -1,0 +1,76 @@
+﻿@model IEnumerable<QLKS.Models.db_Service>
+
+<section class="content-header">
+    <div class="card">
+        <div class="card-body">
+            <div class="card-header">
+                <h3 class="card-title" style="font-family:'Times New Roman'">Dịch vụ</h3>
+            </div>
+            <div class="wow fadeInUp" data-wow-delay="0.2s">
+                <div class="row g-2">
+                    <div class="col-md-12">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>STT</th>
+                                        <th>Tên Dv</th>
+                                        <th>Giá</th>
+                                        <th>Thêm</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{
+                                        int count = 1;
+                                    }
+                                    @foreach (var i in Model)
+                                    {
+
+                                        <tr>
+                                            <td>@(count++)</td>
+                                            <td>@i.ServiceName</td>
+                                            <td>@Html.FormatValue(i.Price, "{0:#,##0}")</td>
+                                            <td>
+                                                <div class="card-tools">
+                                                    <a href="@Url.Action("AddServiceCart", "ServiceCart", new { ms = i.ServiceID, url = Request.Url.ToString() })" class="btn btn-success">+</a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .table-responsive {
+        overflow-x: auto;
+        max-height: 200px;
+    }
+
+    .table th,
+    .table td {
+        text-align: center;
+    }
+
+    .add-to-cart-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 6px 10px;
+        font-size: 14px;
+        text-align: center;
+        text-decoration: none;
+        cursor: pointer;
+        border: none;
+        background-color: #f90;
+        color: #fff;
+        border-radius: 50%;
+    }
+</style>
+

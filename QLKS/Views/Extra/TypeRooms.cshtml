@@ -1,0 +1,46 @@
+﻿@model IEnumerable<QLKS.Models.db_RoomType>
+@{
+    float delayCounter = 0;
+}
+
+@foreach (var i in Model)
+{
+
+    <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="@(delayCounter += 0.2f)">
+        <div class="room-item shadow rounded overflow-hidden">
+            <div class="position-relative">
+                <img class="img-fluid" src="/Content/Client/img/img-Rooms/@i.img" alt="">
+                <small class="position-absolute start-0 top-100 translate-middle-y bg-primary text-white rounded py-1 px-3 ms-4">@Html.FormatValue(i.PricePerNight, "{0:#,##0}")/Đêm</small>
+            </div>
+            <div class="p-4 mt-2">
+                <div class="d-flex justify-content-between mb-3">
+                    <h5 class="mb-0">@i.Type</h5>
+                    <div class="ps-2">
+                        <small class="fa fa-star text-primary"></small>
+                        <small class="fa fa-star text-primary"></small>
+                        <small class="fa fa-star text-primary"></small>
+                        <small class="fa fa-star text-primary"></small>
+                        <small class="fa fa-star text-primary"></small>
+                    </div>
+                </div>
+                <div class="d-flex mb-3">
+                    <small class="border-end me-3 pe-3"><i class="fa fa-bed text-primary me-2"></i>@i.bed</small>
+                    <small class="border-end me-3 pe-3"><i class="fa fa-bath text-primary me-2"></i>@i.bath</small>
+                    <small><i class="fa fa-wifi text-primary me-2"></i>Wifi</small>
+                </div>
+                <p class="text-body mb-3">@i.Description</p>
+                <div class="d-flex justify-content-between">
+                    <!-- Các phần tử bên trái -->
+                    <div>
+                        <!-- Các phần tử bên trái của bạn -->
+                    </div>
+
+                    <!-- Nút "Xem chi tiết" di chuyển sang bên phải -->
+                    <!-- Trong HTML -->
+                    <a class="btn btn-sm btn-primary rounded py-2 px-4 ml-auto" href="@Url.Action("Bookings","Page", new {i.id})">Xem chi tiết</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}

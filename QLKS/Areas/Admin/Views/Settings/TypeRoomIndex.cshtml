@@ -1,0 +1,287 @@
+﻿
+@{
+    ViewBag.Title = "TypeRoomIndex";
+    Layout = "~/Areas/Admin/Views/Shared/LayoutAdmin.cshtml";
+}
+@model IEnumerable<QLKS.Models.db_RoomType>
+<style>
+    .c {
+        margin-bottom: 20px;
+    }
+</style>
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Thiết lập Loại Phòng</h1>
+            </div>
+            <div class="col-sm-6">
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+<section class="content">
+
+    <!-- Đóng row ở đây -->
+    <!-- Default box -->
+    <!-- Default box -->
+    <div class="container">
+        <div class="card">
+
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-6">
+                        <h3 class="card-title" style="font-family:'Times New Roman'">Danh sách loại phòng</h3>
+                    </div>
+                    <div class="col-6">
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" style="float:right">
+                            Thêm loại phòng
+                        </button>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Nhập thông tin phòng mới</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    @using (Html.BeginForm("addTypeRoom", "Settings", FormMethod.Post, new { enctype = "multipart/form-data", url = Request.Url.ToString() }))
+                                    {
+                                        <div class="modal-body">
+                                            <input type="hidden" id="exId" value="0" name="exId" />
+                                            <div class="wow fadeInUp" data-wow-delay="0.2s">
+                                                <div class="row g-3">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="name">Loại phòng</label>
+                                                            <input type="text" class="form-control" id="nameR" name="nameR">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="email">Giá / Đêm</label>
+                                                            <input type="number" class="form-control" id="perOnnight" name="perOnnight">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="name">Bed</label>
+                                                            <input type="number" class="form-control" id="bed" name="bed">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="email">Bath</label>
+                                                            <input type="number" class="form-control" id="bath" name="bath">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="exampleInputFile">Hình ảnh (1)</label>
+                                                            <div class="input-group">
+                                                                <div class="custom-file">
+                                                                    <input type="file" class="custom-file-input" id="imageMain" name="imageMain" onchange="updateFileName(this)">
+                                                                    <label class="custom-file-label" id="lbimgMain" for="exampleInputFile">Chọn file ảnh</label>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="name">Hình ảnh chi tiết (5)</label>
+                                                            <div class="input-group">
+                                                                <div class="custom-file">
+                                                                    <input type="file" class="custom-file-input" id="imageExtra" name="imageExtra" multiple>
+                                                                    <label class="custom-file-label" id="fileCountMessage" for="exampleInputFile">Chọn file ảnh</label>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="form-group">
+                                                            <label for="mota">Mô Tả</label>
+                                                            <textarea class="form-control" rows="3" id="mota" name="mota"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-danger" id="btnCloseModal" data-dismiss="modal">Đóng</button>
+                                            <button type="submit" id="btnSubmit" class="btn btn-primary">Submit</button>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>STT</th>
+                                <th>Loại</th>
+                                <th>Giá / Đêm</th>
+                                <th>Bed</th>
+                                <th>Bath</th>
+                                <th>Hình ảnh</th>
+                                <th>Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Any())
+                            {
+                                var count = 1;
+                                foreach (var i in Model)
+                                {
+                                    <tr>
+                                        <td>@count</td>
+                                        <td>@i.Type</td>
+                                        <td>@i.PricePerNight</td>
+
+                                        <td>@i.bed</td>
+                                        <td>@i.bath</td>
+                                        <td><img src="~/Content/Client/img/img-Rooms/@i.img" height="50" width="65" /></td>
+                                        <td>
+                                            <a href="#" data-id="@i.id" class="btn btn-warning btnEdit"><i class="fa fa-pen-fancy"></i></a>
+                                            <a href="@Url.Action("DeleteTypeRoom","Settings", new {id = i.id , url = Request.Url.ToString()})" class="btn btn-danger">
+                                                <i class="fa fa-trash"></i>
+                                            </a>
+                                        </td>
+
+                                    </tr>
+
+                                    count++;
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="4">Không có bản ghi!!!</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    function updateFileName(input) {
+        const fileInput = input;
+        if (fileInput.files.length > 0) {
+            const fileName = fileInput.files[0].name;
+            const label = fileInput.nextElementSibling;
+            label.textContent = fileName;
+        }
+    }
+    $(document).ready(function () {
+        $('#imageExtra').change(function () {
+            var fileCount = $(this)[0].files.length;
+            $('#fileCountMessage').text('Đã thêm: ' + fileCount);
+        });
+
+        $("#btnSubmit").on("click", function (event) {
+            var nameR = $("#nameR").val();
+            var perOnnight = $('#perOnnight').val();
+            var bed = $('#bed').val();
+            var bath = $('#bath').val();
+            var imageMain = $('#imageMain').val();
+            var dis = $('#mota').val();
+            var id = $('#exId').val();
+
+            if (id == 0) {
+                if (nameR === "" || perOnnight === "" || bed === "" || bath === "" || imageMain === "" || dis === "") {
+                    alert('Vui lòng nhập đủ thông tin');
+                    event.preventDefault();
+                    return;
+                } else if ($('#imageExtra')[0].files.length !== 5) {
+                    alert('Vui lòng chọn đúng 5 hình ảnh cho phần Extra image');
+                    event.preventDefault();
+                    return;
+                }
+            } else {
+                if (nameR === "" || perOnnight === "" || bed === "" || bath === "" || dis === "") {
+                    alert('Vui lòng nhập đủ thông tin');
+                    event.preventDefault();
+                    return;
+                } else if ($('#imageExtra')[0].files.length > 0 && $('#imageExtra')[0].files.length !== 5) {
+                    alert('Nếu bạn muốn thay đổi hình ảnh chi tiết, vui lòng chọn đúng 5 hình ảnh.');
+                    event.preventDefault();
+                    return;
+                }
+            }
+            $(this).closest("form").submit();
+        });
+
+    });
+
+</script>
+<script>
+    $(function () {
+        $('body').on('click', '.btnEdit', function () {
+            var id = $(this).data('id');
+            updateRooms(id);
+        });
+
+        function updateRooms(id) {
+            $.ajax({
+                url: '/Settings/updateTypeRoom',
+                type: 'GET',
+                data: { id: id },
+                success: function (rs) {
+                    if (rs.Data != null) {
+                        var i = rs.Data[0]
+                        $('#nameR').val(i.TypeRoom);
+                        $('#perOnnight').val(i.PricePerNight);
+                        $('#exId').val(i.Id);
+                        $('#bed').val(i.Bed);
+                        $('#bath').val(i.Bath);
+                        $('#mota').val(i.Dis);
+                        $('#exampleModal').modal('show');
+                        $('#lbimgMain').html(i.Img);
+                    }
+                }
+            });
+        }
+    })
+</script>
+<script>
+    $(document).ready(function () {
+        function closeEditModal() {
+            $('#exampleModal').modal('hide');
+        }
+
+        function resetFormFields() {
+            $('#nameR').val('');
+            $('#perOnnight').val('');
+            $('#exId').val('0');
+            $('#bed').val('');
+            $('#bath').val('');
+            $('#imageMain').val('');
+            $('#imageExtra').val('');
+            $('#lbimgMain').html('Chọn file ảnh')
+            $('#mota').val('')
+        }
+
+        $('#exampleModal').on('hidden.bs.modal', function () {
+            resetFormFields();
+        });
+
+        $('#btnCloseModal').on('click', function () {
+            closeEditModal();
+        });
+
+        updateRooms();
+    });
+</script>

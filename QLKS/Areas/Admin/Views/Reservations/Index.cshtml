@@ -1,0 +1,146 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/LayoutAdmin.cshtml";
+}
+@model IEnumerable<QLKS.Models.BookingsOnline>
+<style>
+    .pagination-container {
+        text-align: center;
+        margin-top: 20px; /* Add margin for spacing */
+    }
+
+    .pagination {
+        display: inline-block;
+    }
+
+        .pagination li {
+            display: inline;
+            margin: 0 5px;
+        }
+
+        .pagination a {
+            color: #333;
+            text-decoration: none;
+            padding: 8px 16px;
+            border: 2px solid #333;
+            border-radius: 4px;
+        }
+
+            .pagination a:hover, .pagination .active {
+                height: 40px;
+                width: 40px;
+                background-color: #333;
+                color: #fff;
+                border: 2px solid #333;
+            }
+</style>
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Đơn đặt phòng</h1>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row" style="padding-bottom:20px">
+        <div class="col-lg-2 col-sm-4">
+            <div class="dropdown c">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Tùy chọn đơn đặt phòng
+                </button>
+                <div class="dropdown-menu d" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="@Url.Action("Index","Reservations" , new {id = 0})">Đơn chưa duyệt</a>
+                    <a class="dropdown-item" href="@Url.Action("Index","Reservations" , new {id = 1})">Đơn đã duyệt</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Default box -->
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Danh sách đặt phòng</h3>
+        </div>
+        <div class="card-body">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Khách hàng</th>
+                        <th>Số điện thoại</th>
+                        <th>Loại phòng</th>
+                        <th>Mã phòng</th>
+                        <th>Check-In</th>
+                        <th>Check-Out</th>
+                        <th>Xác nhận</th>
+                        <th>Tiếp nhận</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        var count = 1;
+                        foreach (var i in Model)
+                        {
+                            <tr>
+                                <td>@count</td>
+                                <td>@i.Custommer.FullName</td>
+                                <td>@i.Custommer.Phone</td>
+                                <td>@i.db_Room.db_RoomType.Type</td>
+                                <td>@i.db_Room.RoomNumber</td>
+                                <td>@i.CheckInDate</td>
+                                <td>@i.CheckOutDate</td>
+                                <td>
+                                    @if (i.status == 0)
+                                    {
+                                        <a href="@Url.Action("check","Reservations", new {id = @i.id , url = Request.Url.ToString()})" 
+                                           class="btn btn-sm btn-primary">Check</a>
+
+                                    }
+                                    else
+                                    {
+                                        <a href="@Url.Action("check","Reservations", new {id = @i.id , url = Request.Url.ToString()})"
+                                             class="btn btn-sm btn-primary" onclick="return false">Checked</a>
+                                    }
+                                </td>
+                                <td>
+                                    @if (i.status == 0)
+                                    {
+                                        <a href="@Url.Action("receive", "Reservations", new { id = @i.id, url = Request.Url.ToString() })"
+                                           class="btn btn-sm btn-success">
+                                            Tiếp nhận
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                    <a href="@Url.Action("receive", "Reservations", new { id = @i.id, url = Request.Url.ToString() })"
+                                       class="btn btn-sm btn-danger" onclick="return false">
+                                        Đã tiếp nhận
+                                    </a>
+                                    }
+                                </td>
+
+                            </tr>
+
+                            count++;
+                                    }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="4">Không có bản ghi!!!</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+ 
+</section>
+

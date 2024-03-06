@@ -1,0 +1,167 @@
+﻿
+@{
+    ViewBag.Title = "FloorIndex";
+    Layout = "~/Areas/Admin/Views/Shared/LayoutAdmin.cshtml";
+}
+
+@model IEnumerable<QLKS.Models.db_Floor>
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Thiết lập Loại Phòng</h1>
+            </div>
+            <div class="col-sm-6">
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+<section class="content">
+
+    <!-- Đóng row ở đây -->
+    <!-- Default box -->
+    <!-- Default box -->
+    <div class="container">
+        <div class="card">
+
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-6">
+                        <h3 class="card-title" style="font-family:'Times New Roman'">Danh sách loại phòng</h3>
+                    </div>
+                    <div class="col-6">
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" style="float:right">
+                            Thêm loại phòng
+                        </button>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Nhập thông tin phòng mới</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    @using (Html.BeginForm("addFloor", "Settings", new { url = Request.Url.ToString() }))
+                                    {
+                                        <div class="modal-body">
+                                            <input type="hidden" id="exId" value="0" name="exId" />
+                                            <div class="wow fadeInUp" data-wow-delay="0.2s">
+                                                 <div class="form-group">
+                                                     <label for="name">Nhập tầng</label>
+                                                     <input type="number" class="form-control" id="floor" name="floor">
+                                                 </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-danger" id="btnCloseModal" data-dismiss="modal">Đóng</button>
+                                            <button type="submit" id="btnSubmit" class="btn btn-primary">Submit</button>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>STT</th>
+                                <th>Tầng</th>
+                                <th>Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Any())
+                            {
+                                var count = 1;
+                                foreach (var i in Model)
+                                {
+                                    <tr>
+                                        <td>@count</td>
+                                        <td>@i.Floor</td>
+                                        <td>
+                                            <a href="#" data-id="@i.id" class="btn btn-warning btnEdit"><i class="fa fa-pen-fancy"></i></a>
+                                            <a href="@Url.Action("deleteFloor","Settings", new {id = i.id , url = Request.Url.ToString()})" class="btn btn-danger">
+                                                <i class="fa fa-trash"></i>
+                                            </a>
+                                        </td>
+
+                                    </tr>
+
+                                    count++;
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="4">Không có bản ghi!!!</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    $(function () {
+        $('body').on('click', '.btnEdit', function () {
+            var id = $(this).data('id');
+            updateRooms(id);
+        });
+        function updateRooms(id) {
+            $.ajax({
+                url: '/Settings/updateFloor',
+                type: 'GET',
+                data: { id: id },
+                success: function (rs) {
+                    if (rs.Data != null) {
+                        var i = rs.Data[0]
+                        $('#exId').val(i.id)
+                        $('#floor').val(i.floor);
+                        $('#exampleModal').modal('show');
+                    }
+                }
+            });
+        }
+    })
+</script>
+
+<script>
+    $(document).ready(function () {
+        $("#btnSubmit").on("click", function (event) {
+            var floor = $("#floor").val();
+            if (floor === "") {
+                alert('Vui lòng nhập đủ thông tin');
+                event.preventDefault();
+                return;
+            }
+            $(this).closest("form").submit();
+        });
+        function closeEditModal() {
+            $('#exampleModal').modal('hide');
+        }
+
+        function resetFormFields() {
+            $('#floor').val('');
+            $('#exId').val('0');
+        }
+
+        $('#exampleModal').on('hidden.bs.modal', function () {
+            resetFormFields();
+        });
+
+        $('#btnCloseModal').on('click', function () {
+            closeEditModal();
+        });
+
+        updateRooms();
+    });
+</script>

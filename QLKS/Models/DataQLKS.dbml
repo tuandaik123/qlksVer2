@@ -1,0 +1,192 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="db_HotelManagement" Class="DataQLKSDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Table Name="dbo.BookingsOnline" Member="BookingsOnlines">
+    <Type Name="BookingsOnline">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="custommerID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="RoomID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="CheckInDate" Type="System.DateTime" DbType="Date" CanBeNull="true" />
+      <Column Name="CheckOutDate" Type="System.DateTime" DbType="Date" CanBeNull="true" />
+      <Column Name="Verification" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
+      <Column Name="status" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="Custommer_BookingsOnline" Member="Custommer" ThisKey="custommerID" OtherKey="CustomerID" Type="Custommer" IsForeignKey="true" DeleteRule="CASCADE" />
+      <Association Name="db_Room_BookingsOnline" Member="db_Room" ThisKey="RoomID" OtherKey="RoomID" Type="db_Room" IsForeignKey="true" DeleteRule="CASCADE" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Custommer" Member="Custommers">
+    <Type Name="Custommer">
+      <Column Name="CustomerID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="UserID" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="FullName" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="Email" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="Phone" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Association Name="Custommer_BookingsOnline" Member="BookingsOnlines" ThisKey="CustomerID" OtherKey="custommerID" Type="BookingsOnline" />
+      <Association Name="Custommer_db_Booking" Member="db_Bookings" ThisKey="CustomerID" OtherKey="CustomerID" Type="db_Booking" />
+      <Association Name="Custommer_db_Feedback" Member="db_Feedbacks" ThisKey="CustomerID" OtherKey="CustomerID" Type="db_Feedback" />
+    </Type>
+  </Table>
+  <Table Name="dbo.db_Bookings" Member="db_Bookings">
+    <Type Name="db_Booking">
+      <Column Name="BookingID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="CustomerID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="RoomID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="CheckInDate" Type="System.DateTime" DbType="Date" CanBeNull="true" />
+      <Column Name="CheckOutDate" Type="System.DateTime" DbType="Date" CanBeNull="true" />
+      <Column Name="status" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="db_Booking_db_Feedback" Member="db_Feedbacks" ThisKey="BookingID" OtherKey="BookingID" Type="db_Feedback" />
+      <Association Name="db_Booking_db_Payment" Member="db_Payments" ThisKey="BookingID" OtherKey="BookingID" Type="db_Payment" />
+      <Association Name="db_Booking_db_RoomService" Member="db_RoomServices" ThisKey="BookingID" OtherKey="BookingID" Type="db_RoomService" />
+      <Association Name="Custommer_db_Booking" Member="Custommer" ThisKey="CustomerID" OtherKey="CustomerID" Type="Custommer" IsForeignKey="true" DeleteRule="CASCADE" />
+      <Association Name="db_Room_db_Booking" Member="db_Room" ThisKey="RoomID" OtherKey="RoomID" Type="db_Room" IsForeignKey="true" DeleteRule="CASCADE" />
+    </Type>
+  </Table>
+  <Table Name="dbo.db_Events" Member="db_Events">
+    <Type Name="db_Event">
+      <Column Name="EventID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="EventName" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="Date" Type="System.DateTime" DbType="Date NOT NULL" CanBeNull="false" />
+      <Column Name="Location" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Table Name="dbo.db_Feedback" Member="db_Feedbacks">
+    <Type Name="db_Feedback">
+      <Column Name="FeedbackID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="CustomerID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="BookingID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Rating" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Comments" Type="System.String" DbType="Text" CanBeNull="true" UpdateCheck="Never" />
+      <Association Name="db_Booking_db_Feedback" Member="db_Booking" ThisKey="BookingID" OtherKey="BookingID" Type="db_Booking" IsForeignKey="true" />
+      <Association Name="Custommer_db_Feedback" Member="Custommer" ThisKey="CustomerID" OtherKey="CustomerID" Type="Custommer" IsForeignKey="true" DeleteRule="CASCADE" />
+    </Type>
+  </Table>
+  <Table Name="dbo.db_Facilities" Member="db_Facilities">
+    <Type Name="db_Facility">
+      <Column Name="FacilityID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="FacilityName" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="Description" Type="System.String" DbType="Text" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="icon" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.db_Floor" Member="db_Floors">
+    <Type Name="db_Floor">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Floor" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="db_Floor_db_Room" Member="db_Rooms" ThisKey="id" OtherKey="floorID" Type="db_Room" />
+    </Type>
+  </Table>
+  <Table Name="dbo.db_Payments" Member="db_Payments">
+    <Type Name="db_Payment">
+      <Column Name="PaymentID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="BookingID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Amount" Type="System.Decimal" DbType="Decimal(10,0) NOT NULL" CanBeNull="false" />
+      <Column Name="PaymentDate" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="method" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
+      <Column Name="Tax" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Discount" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="db_Booking_db_Payment" Member="db_Booking" ThisKey="BookingID" OtherKey="BookingID" Type="db_Booking" IsForeignKey="true" DeleteRule="CASCADE" />
+    </Type>
+  </Table>
+  <Table Name="dbo.db_RoomServices" Member="db_RoomServices">
+    <Type Name="db_RoomService">
+      <Column Name="RoomServiceID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="BookingID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ServiceID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Quantity" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="TotalPrice" Type="System.Decimal" DbType="Decimal(10,0)" CanBeNull="true" />
+      <Column Name="status" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
+      <Column Name="datetime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Association Name="db_Booking_db_RoomService" Member="db_Booking" ThisKey="BookingID" OtherKey="BookingID" Type="db_Booking" IsForeignKey="true" DeleteRule="CASCADE" />
+      <Association Name="db_Service_db_RoomService" Member="db_Service" ThisKey="ServiceID" OtherKey="ServiceID" Type="db_Service" IsForeignKey="true" DeleteRule="CASCADE" />
+    </Type>
+  </Table>
+  <Table Name="dbo.db_RoomType" Member="db_RoomTypes">
+    <Type Name="db_RoomType">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Type" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="PricePerNight" Type="System.Decimal" DbType="Decimal(10,0)" CanBeNull="true" />
+      <Column Name="bed" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="bath" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="img" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="Description" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Association Name="db_RoomType_ImageTypeRoom" Member="ImageTypeRooms" ThisKey="id" OtherKey="idType" Type="ImageTypeRoom" />
+      <Association Name="db_RoomType_db_Room" Member="db_Rooms" ThisKey="id" OtherKey="idroomtype" Type="db_Room" />
+    </Type>
+  </Table>
+  <Table Name="dbo.db_Services" Member="db_Services">
+    <Type Name="db_Service">
+      <Column Name="ServiceID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="ServiceName" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="Description" Type="System.String" DbType="Text" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="Price" Type="System.Decimal" DbType="Decimal(10,0)" CanBeNull="true" />
+      <Column Name="image" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Association Name="db_Service_db_RoomService" Member="db_RoomServices" ThisKey="ServiceID" OtherKey="ServiceID" Type="db_RoomService" />
+    </Type>
+  </Table>
+  <Table Name="dbo.db_Staff" Member="db_Staffs">
+    <Type Name="db_Staff">
+      <Column Name="StaffID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="UserID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="FirstName" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="LastName" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="Position" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Salary" Type="System.Decimal" DbType="Decimal(10,2) NOT NULL" CanBeNull="false" />
+      <Association Name="db_User_db_Staff" Member="db_User" ThisKey="UserID" OtherKey="UserID" Type="db_User" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.db_Tax" Member="db_Taxes">
+    <Type Name="db_Tax">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="tax" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Discount" Member="Discounts">
+    <Type Name="Discount">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="name" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="[end]" Member="end" Type="System.DateTime" DbType="Date" CanBeNull="true" />
+      <Column Name="start" Type="System.DateTime" DbType="Date" CanBeNull="true" />
+      <Column Name="discount" Member="discount1" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.ImageTypeRoom" Member="ImageTypeRooms">
+    <Type Name="ImageTypeRoom">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="img" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="idType" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="db_RoomType_ImageTypeRoom" Member="db_RoomType" ThisKey="idType" OtherKey="id" Type="db_RoomType" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Slider" Member="Sliders">
+    <Type Name="Slider">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="image" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="slogan" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.db_Rooms" Member="db_Rooms">
+    <Type Name="db_Room">
+      <Column Name="RoomID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="RoomNumber" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Slot" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="RoomStatus" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ActiveStatus" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="idroomtype" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="floorID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="db_Room_BookingsOnline" Member="BookingsOnlines" ThisKey="RoomID" OtherKey="RoomID" Type="BookingsOnline" />
+      <Association Name="db_Room_db_Booking" Member="db_Bookings" ThisKey="RoomID" OtherKey="RoomID" Type="db_Booking" />
+      <Association Name="db_Floor_db_Room" Member="db_Floor" ThisKey="floorID" OtherKey="id" Type="db_Floor" IsForeignKey="true" DeleteRule="CASCADE" />
+      <Association Name="db_RoomType_db_Room" Member="db_RoomType" ThisKey="idroomtype" OtherKey="id" Type="db_RoomType" IsForeignKey="true" DeleteRule="CASCADE" />
+    </Type>
+  </Table>
+  <Table Name="dbo.db_Users" Member="db_Users">
+    <Type Name="db_User">
+      <Column Name="UserID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Username" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="Password" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="qlKS" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
+      <Column Name="qlWeb" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
+      <Column Name="qlThongKe" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
+      <Column Name="qlSetting" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
+      <Association Name="db_User_db_Staff" Member="db_Staffs" ThisKey="UserID" OtherKey="UserID" Type="db_Staff" />
+    </Type>
+  </Table>
+</Database>

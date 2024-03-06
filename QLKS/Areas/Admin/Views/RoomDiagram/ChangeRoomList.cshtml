@@ -1,0 +1,5 @@
+﻿@model IEnumerable<QLKS.Models.db_Room>
+@foreach (var i in Model)
+{
+    <option value="@i.RoomID">@i.RoomNumber</option>
+}

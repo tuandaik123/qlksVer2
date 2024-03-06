@@ -1,0 +1,447 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/LayoutAdmin.cshtml";
+}
+
+<!-- Main content -->
+<!-- Default box -->
+<section class="content" style="margin-top:20px">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title" style="font-size: 30px; font-family:'Times New Roman';">Thống kê doanh thu</h3>
+            </div>
+            <div class="card-body">
+                <div class="row" style="margin-bottom:20px">
+                    <div class="col-lg-3 col-6">
+                        <!-- small box -->
+                        <div class="small-box bg-info">
+                            <div class="inner">
+                                <h3 id="newBookingToday">0</h3>
+
+                                <p>Hóa đơn mới hôm nay</p>
+                            </div>
+                            <div class="icon">
+                                <i class="ion ion-bag"></i>
+                            </div>
+                            <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                        </div>
+                    </div>
+                    <!-- ./col -->
+                    <div class="col-lg-3 col-6">
+                        <!-- small box -->
+                        <div class="small-box bg-success">
+                            <div class="inner">
+                                <h3 id="revenueToday">0</h3>
+
+                                <p>Tổng doanh thu hôm nay</p>
+                            </div>
+                            <div class="icon">
+                                <i class="ion ion-stats-bars"></i>
+                            </div>
+                            <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                        </div>
+                    </div>
+                    <!-- ./col -->
+                    <div class="col-lg-3 col-6">
+                        <!-- small box -->
+                        <div class="small-box bg-warning">
+                            <div class="inner">
+                                <h3 id="bookingOnline">0</h3>
+
+                                <p>Hóa đơn dịch vụ hôm nay</p>
+                            </div>
+                            <div class="icon">
+                                <i class="ion ion-bag"></i>
+                            </div>
+                            <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                        </div>
+                    </div>
+                    <!-- ./col -->
+                    <div class="col-lg-3 col-6">
+                        <!-- small box -->
+                        <div class="small-box bg-danger">
+                            <div class="inner">
+                                <h3 id="service">0</h3>
+
+                                <p>Tổng doanh thu dịch vụ hôm nay</p>
+                            </div>
+                            <div class="icon">
+                                <i class="ion ion-pie-graph"></i>
+                            </div>
+                            <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                        </div>
+                    </div>
+                    <!-- ./col -->
+                </div>
+                <!-- First Row for Date Inputs -->
+                <div class="row g-3">
+                    <!-- Second Row for Charts -->
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="dropdown">
+                                <button class="btn btn-secondary dropdown-toggle" style="margin-bottom:20px;" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Lựa chọn theo năm
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="showYear">
+
+                                </div>
+                            </div>
+                            <div class="card card-success">
+                                <div class="card-header">
+                                    <h3 class="card-title">Theo Năm</h3>
+                                    <div class="card-tools">
+
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="chart">
+                                        <canvas id="barChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="row g-3">
+                                <div class="col-md-5">
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label">Từ</label>
+                                        <div class="col-sm-10">
+                                            <input type="date" class="form-control" id="checkin" name="checkin" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label">Đến</label>
+                                        <div class="col-sm-10">
+                                            <input type="date" class="form-control" id="checkout" name="checkout" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-1">
+                                    <div class="form-group row">
+                                        <button class="btn-success" id="btnOk" style="width:37px;height:37px;border-radius:5px">OK</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card card-success">
+                                <div class="card-header">
+                                    <h3 class="card-title">Theo ngày</h3>
+                                    <div class="card-tools">
+
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="chart">
+                                        <canvas id="stackedBarChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<script>
+    $(function () {
+        function newBookingToday() {
+            $.ajax({
+                url: '/Turnover/Today',
+                type: 'GET',
+                success: function (rs) {
+                    $("#newBookingToday").html(rs.Booking);
+                    $("#revenueToday").html(rs.revenue.toLocaleString('vi-VN', { style: 'currency', currency: 'VND', maximumFractionDigits: 0 }));
+                    $("#service").html(rs.service.toLocaleString('vi-VN', { style: 'currency', currency: 'VND', maximumFractionDigits: 0 }));
+                    $('#bookingOnline').html(rs.bookingOnline);
+
+                }
+            })
+        }
+
+        newBookingToday();
+    });
+</script>
+<script>
+    $(function () {
+        var date = [];
+        var cash = [];
+        var banking = [];
+        var barChart;
+
+        function loadTotalPaymentByYear(selectedYear) {
+            var selectedYearString = selectedYear.toString();
+            date = [];
+            cash = [];
+            banking = [];
+            $.ajax({
+                url: '/Turnover/GetTotalPaymentByMonth',
+                type: 'GET',
+                success: function (rs) {
+                    $.each(rs.Data, function (index, item) {
+                        if (item.MonthYear.split('/')[1] === selectedYearString) {
+                            date.push(item.MonthYear);
+                            cash.push(item.Cash);
+                            banking.push(item.BankingAmount);
+                        }
+                    });
+                    updateChart();
+                }
+            });
+        }
+
+        function loadYear() {
+            $.ajax({
+                url: '/Turnover/getYear',
+                type: 'GET',
+                success: function (rs) {
+                    var items = rs.Data;
+                    var html = "";
+
+                    for (let i = 0; i < rs.Total; i++) {
+                        html += '<a class="dropdown-item" href="#" data-year="' + items[i] + '">' + items[i] + '</a>';
+                    }
+
+                    $('#showYear').html(html);
+
+                    $('#showYear a').on('click', function () {
+                        var selectedYear = $(this).data('year');
+                        $('#showYear a').removeClass('active');
+                        $(this).addClass('active');
+                        loadTotalPaymentByYear(selectedYear);
+                    });
+
+                    $('#showYear a:last').click();
+                }
+            });
+        }
+
+        function updateChart() {
+            if (barChart) {
+                barChart.destroy();
+            }
+
+            var areaChartData = {
+                labels: date,
+                datasets: [
+                    {
+                        label: 'Tiền mặt',
+                        backgroundColor: 'rgba(60,141,188,0.9)',
+                        borderColor: 'rgba(60,141,188,0.8)',
+                        pointRadius: false,
+                        pointColor: '#3b8bba',
+                        pointStrokeColor: 'rgba(60,141,188,1)',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: 'rgba(60,141,188,1)',
+                        data: cash
+                    },
+                    {
+                        label: 'Chuyển khoản',
+                        backgroundColor: 'rgba(210, 214, 222, 1)',
+                        borderColor: 'rgba(210, 214, 222, 1)',
+                        pointRadius: false,
+                        pointColor: 'rgba(210, 214, 222, 1)',
+                        pointStrokeColor: '#c1c7d1',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: 'rgba(220,220,220,1)',
+                        data: banking
+                    },
+                ]
+            };
+
+            // BAR CHART
+            var barChartCanvas = $('#barChart').get(0).getContext('2d');
+
+            var barChartOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                datasetFill: false,
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true,
+                            callback: function (value, index, values) {
+                                return value.toLocaleString('en-US', { style: 'currency', currency: 'VND' });
+                            }
+                        }
+                    }]
+                },
+                tooltips: {
+                    callbacks: {
+                        label: function (tooltipItem, data) {
+                            var label = data.datasets[tooltipItem.datasetIndex].label || '';
+                            var value = tooltipItem.yLabel;
+                            if (label) {
+                                label += ': ';
+                            }
+                            label += value.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+                            return label;
+                        }
+                    }
+                }
+            };
+
+            barChart = new Chart(barChartCanvas, {
+                type: 'bar',
+                data: areaChartData,
+                options: barChartOptions
+            });
+        }
+
+        loadYear();
+    });
+</script>
+
+
+<script>
+    $(function () {
+        var date = [];
+        var cash = [];
+        var banking = [];
+        var barChart;
+
+        var defaultStartDate = '2024-01-01';
+        var defaultEndDate = '2024-01-01';
+
+        function loadTotalPaymentByDateRange(startDate, endDate) {
+            date = [];
+            cash = [];
+            banking = [];
+            var start = new Date(startDate);
+            var end = new Date(endDate);
+            $.ajax({
+                url: '/Turnover/GetTotalPaymentByDay',
+                type: 'GET',
+                success: function (rs) {
+                    $.each(rs.Data, function (i, item) {
+                        var dateComponents = item.MonthYear.split('/');
+                        var x = new Date(parseInt(dateComponents[2]), parseInt(dateComponents[1]) - 1, parseInt(dateComponents[0]));
+
+                        if (start.getDate() <= x.getDate() && end.getDate() >= x.getDate()) {
+                            date.push(item.MonthYear.split('/').slice(0, 2).join('/'));
+                            cash.push(item.Cash);
+                            banking.push(item.BankingAmount);
+                        }
+                    });
+                    updateChart();
+                },
+            });
+        }
+
+        function updateChart() {
+            if (barChart) {
+                barChart.destroy();
+            }
+
+            var stackedBarChartData = {
+                labels: date,
+                datasets: [
+                    {
+                        label: 'Tiền mặt',
+                        backgroundColor: 'rgba(60,141,188,0.9)',
+                        borderColor: 'rgba(60,141,188,0.8)',
+                        pointRadius: false,
+                        pointColor: '#3b8bba',
+                        pointStrokeColor: 'rgba(60,141,188,1)',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: 'rgba(60,141,188,1)',
+                        data: cash
+                    },
+                    {
+                        label: 'Chuyển khoản',
+                        backgroundColor: 'rgba(210, 214, 222, 1)',
+                        borderColor: 'rgba(210, 214, 222, 1)',
+                        pointRadius: false,
+                        pointColor: 'rgba(210, 214, 222, 1)',
+                        pointStrokeColor: '#c1c7d1',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: 'rgba(220,220,220,1)',
+                        data: banking
+                    }
+                ]
+            };
+
+            var stackedBarChartCanvas = $('#stackedBarChart').get(0).getContext('2d');
+
+            var stackedBarChartOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    xAxes: [{
+                        stacked: true
+                    }],
+                    yAxes: [{
+                        stacked: true
+                    }]
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true,
+                            callback: function (value, index, values) {
+                                return value.toLocaleString('en-US', { style: 'currency', currency: 'VND' });
+                            }
+                        }
+                    }]
+                },
+                tooltips: {
+                    callbacks: {
+                        label: function (tooltipItem, data) {
+                            var label = data.datasets[tooltipItem.datasetIndex].label || '';
+                            var value = tooltipItem.yLabel;
+                            if (label) {
+                                label += ': ';
+                            }
+                            label += value.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+                            return label;
+                        }
+                    }
+                }
+            };
+
+            barChart = new Chart(stackedBarChartCanvas, {
+                type: 'bar',
+                data: stackedBarChartData,
+                options: stackedBarChartOptions
+            });
+        }
+
+        $('#btnOk').on('click', function () {
+            var startDate = $('#checkin').val();
+            var endDate = $('#checkout').val();
+            loadTotalPaymentByDateRange(startDate, endDate);
+        });
+
+        loadTotalPaymentByDateRange(defaultStartDate, defaultEndDate);
+    });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var checkinInput = document.getElementById('checkin');
+        var checkoutInput = document.getElementById('checkout');
+        var submitButton = document.getElementById('btnOk');
+
+        function updateButtonStatus() {
+            var checkinValue = checkinInput.value.trim();
+            var checkoutValue = checkoutInput.value.trim();
+
+            if (checkinValue !== "" && checkoutValue !== "" && checkinValue < checkoutValue) {
+                submitButton.disabled = false;
+            } else {
+                submitButton.disabled = true;
+                submitButton.backgroundColor = 'red';
+            }
+        }
+
+        checkinInput.addEventListener('input', updateButtonStatus);
+        checkoutInput.addEventListener('input', updateButtonStatus);
+
+        updateButtonStatus();
+    });
+</script>

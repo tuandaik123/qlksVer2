@@ -1,0 +1,261 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/LayoutAdmin.cshtml";
+}
+<style>
+
+    .room {
+        width: 220px;
+        height: 220px;
+        margin: 15px;
+        border: 2px solid #ccc;
+        align-items: center;
+        text-align: center;
+        justify-content: center;
+        font-size: 14px;
+        font-weight: bold;
+        border-radius: 13px;
+        transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
+        cursor: pointer;
+        display: inline-block;
+    }
+
+    .occupied {
+        color: white;
+    }
+
+    .room:hover {
+        transform: scale(1.1);
+        filter: brightness(1.2);
+    }
+
+    .c {
+        margin: 20px 20px 20px 0px;
+    }
+
+    .d {
+        text-align: center;
+    }
+
+    .ic {
+        font-size: 75px;
+        align-content: center;
+        margin-top: 25%;
+        color: black;
+    }
+
+    .p {
+        font-size: 20px;
+        margin-top: 5px;
+        color: black;
+    }
+
+    .lb {
+        font-size: 20px;
+    }
+</style>
+<section class="content" style="margin-top:20px">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title" style="font-size: 30px; font-family:'Times New Roman';">Thiết lập chính</h3>
+            </div>
+            <div class="card-body">
+                <div class="card-body">
+                    <a href="@Url.Action("RoomsIndex","Settings")" class="room" style="background-color: white;">
+                        <i class="fa fa-home ic"></i> <br />
+                        <p class="p">Phòng</p>
+                    </a>
+                    <a href="@Url.Action("TypeRoomIndex","Settings")" class="room" style="background-color: white;">
+                        <i class="fa fa-university ic"></i> <br />
+                        <p class="p">Loại phòng</p>
+                    </a>
+                    <a href="@Url.Action("FloorIndex","Settings")" class="room" style="background-color: white;">
+                        <i class="fa fa-angle-up ic"></i> <br />
+                        <p class="p">Tầng</p>
+                    </a>
+                    <a href="" class="room" style="background-color: white;">
+                        <i class="fa fa-user ic"></i> <br />
+                        <p class="p">Phân quyền</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<section class="content" style="margin-top:20px">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title" style="font-size: 30px; font-family:'Times New Roman';">Thiết lập khác</h3>
+            </div>
+            <div class="card-body">
+                <div class="card-body">
+                    <div style="display: inline">
+                        <label id="lbTax" class="lb">Thiết lập thuế :</label>
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" style="float:right">
+                            Thiết lập
+                        </button>
+                        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Thiết lập thuế</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    @using (Html.BeginForm("settingsTax", "Settings", new { url = Request.Url.ToString() }))
+                                    {
+                                        <form>
+
+                                            <div class="modal-body">
+                                                <label for="checkout">Nhập % thuế :</label>
+                                                <div class="form-floating date" id="date4" data-target-input="nearest">
+                                                    <input id="lbTaxip" type="number" class="form-control" name="tax" />
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-danger" data-dismiss="modal">Đóng</button>
+                                                <button type="button" id="confirmButton" class="btn btn-primary">Xác nhận</button>
+                                            </div>
+                                        </form>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div style="display: inline">
+                        <label id="lbDiscount" class="lb">Chương trình giảm giá : </label>
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal1" style="float:right">
+                            Thiết lập
+                        </button>
+                        <div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel1" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel1">Thiết lập thuế</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    @using (Html.BeginForm("settingsDiscount", "Settings", new { url = Request.Url.ToString() }))
+                                    {
+                                        <div class="modal-body">
+                                            <div class="row g-3">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="name">Tên chương trình </label>
+                                                        <input type="text" class="form-control" id="Disname" value="" name="name">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="email">% giảm giá</label>
+                                                        <input type="number" class="form-control" id="Discount" value="" name="discount">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="email">Ngày bắt đầu</label>
+                                                        <input type="date" class="form-control " id="Disstart" placeholder="Check In" name="start" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="email">Ngày kết thúc</label>
+                                                        <input type="date" class="form-control " id="Disend" placeholder="Check In" name="end" />
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-danger" data-dismiss="modal">Đóng</button>
+                                            <button type="submit" id="confirmButton2" class="btn btn-primary">Xác nhận</button>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<script>
+    $(function () {
+
+        function formatDateForInput(date) {
+            var year = date.getFullYear();
+            var month = ('0' + (date.getMonth() + 1)).slice(-2);
+            var day = ('0' + date.getDate()).slice(-2);
+            return year + '-' + month + '-' + day;
+        }
+        function getTaxAnDiscount() {
+            $.ajax({
+                url: '/Settings/getTaxandDiscount',
+                type: 'GET',
+                success: function (rs) {
+                    $("#lbTax").html('Thiết lập thuế : ' + rs.jsTax + '%');
+                    $("#lbTaxip").val(rs.jsTax);
+                    var startDate = new Date(parseInt(rs.jsDis.start.substr(6)));
+                    var endDate = new Date(parseInt(rs.jsDis.end.substr(6)));
+                    var statsus = '';
+                    var currentDate = new Date();
+                    if (currentDate >= startDate && currentDate <= endDate) {
+                        statsus = 'Hoạt động';
+                    }
+                    else {
+                        statsus = 'Hết hạn'
+                    }
+                    $("#lbDiscount").html('Chương trình giảm giá : ' + rs.jsDis.discount1 + '%    |   ' + statsus)
+                    $("#Disname").val(rs.jsDis.name);
+                    $("#Discount").val(rs.jsDis.discount1);
+                    $("#Disstart").val(formatDateForInput(startDate));
+                    $("#Disend").val(formatDateForInput(endDate));
+                }
+            })
+        }
+        getTaxAnDiscount()
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $("#confirmButton, #confirmButton2").on("click", function () {
+            var tax = $("#lbTaxip").val();
+            var name = $("#Disname").val();
+            var discount = $("#Discount").val();
+            var start = $("#Disstart").val();
+            var end = $("#Disend").val();
+
+            if (this.id === "confirmButton2") {
+                if (!name || !discount || !start || !end) {
+                    alert('Vui lòng nhập đầy đủ thông tin');
+                    event.preventDefault();
+                    return;
+                } else if (end < start) {
+                    alert('Ngày bắt đầu phải nhỏ hơn ngày kết thúc');
+                    event.preventDefault();
+                    return;
+                }
+            } else if (this.id === "confirmButton") {
+                if (!tax || tax < 0) {
+                    alert('Vui lòng nhập % thuế và % thuế lớn hơn 0!');
+                    event.preventDefault();
+                    return;
+                }
+            }
+            $(this).closest("form").submit();
+        });
+    });
+
+</script>

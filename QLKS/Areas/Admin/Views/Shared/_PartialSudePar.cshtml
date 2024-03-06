@@ -1,0 +1,137 @@
+﻿<!-- Sidebar -->
+<div class="sidebar" style="overflow:hidden">
+    <!-- Sidebar user (optional) -->
+    <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+        <div class="image">
+            <img src="~/Content/Client/img/team-2.jpg" class="img-circle elevation-2" alt="User Image">
+        </div>
+        @{ 
+            QLKS.Models.db_User t = Session["admin"] as QLKS.Models.db_User;
+        }
+        <div class="info">
+            <a href="#" class="d-block">Xin chào </a>
+        </div>
+    </div>
+
+    <!-- SidebarSearch Form -->
+    <div class="form-inline">
+        <div class="input-group" data-widget="sidebar-search">
+            <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
+            <div class="input-group-append">
+                <button class="btn btn-sidebar">
+                    <i class="fas fa-search fa-fw"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar Menu -->
+    <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+            <!-- Add icons to the links using the .nav-icon class
+    with font-awesome or any other icon font library -->
+            @{ 
+                 QLKS.Models.db_User check = Session["admin"] as QLKS.Models.db_User;
+            }
+            @if (check.qlKS == 1)
+            {
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <i class="nav-icon fas fa-home"></i>
+                    <p>
+                        Quản Lý Khách Sạn
+                        <i class="right fas fa-angle-left"></i>
+                    </p>
+                </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="@Url.Action("Roomdiagram", "Roomdiagram")" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Sơ Đồ Phòng</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="@Url.Action("Index", "Reservations")" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Đơn đặt phòng Online</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="@Url.Action("Index", "Product")" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Hóa đơn </p>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            }
+            @if (check.qlWeb == 1)
+            {
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <i class="nav-icon fas fa-th"></i>
+                    <p>
+                        Quản Lý Website
+                        <i class="right fas fa-angle-left"></i>
+                    </p>
+                </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="@Url.Action("Roomdiagram", "Roomdiagram")" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Slogan & Slider</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="@Url.Action("Index", "Reservations")" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Tin tức</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="@Url.Action("Index", "Product")" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Liên hệ</p>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            }
+            @if (check.qlThongKe == 1)
+            {
+            <li class="nav-item">
+                <a href="@Url.Action("Index", "Turnover")" class="nav-link">
+                    <i class="nav-icon fas fa-chart-pie"></i>
+                    <p>
+                        Thống kê
+                        <i class="right fas"></i>
+                    </p>
+                </a>
+            </li>
+            }
+            @if (check.qlSetting == 1)
+            {
+            <li class="nav-item">
+                <a href="@Url.Action("Index", "Settings")" class="nav-link">
+                    <i class="nav-icon fas  fa-cog"></i>
+                    <p>
+                        Thiết lập
+                        <i class="right fas"></i>
+                    </p>
+                </a>
+            </li>
+            }
+            <li class="nav-item">
+                <a href="@Url.Action("Logout","Login")" class="nav-link">
+                    <i class="nav-icon fas  fa-sign-out-alt"></i>
+                    <p>
+                        Đăng xuất
+                        <i class="right fas"></i>
+                    </p>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <!-- /.sidebar-menu -->
+</div>
+<!-- /.sidebar -->

@@ -1,0 +1,301 @@
+﻿
+@{
+    ViewBag.Title = "SelectRooms";
+    Layout = "~/Areas/Admin/Views/Shared/LayoutAdmin.cshtml";
+}
+@model IEnumerable<QLKS.Models.db_Room>
+
+<section class="content-header">
+</section>
+<div class="container">
+    <div class="card">
+
+        <div class="card-body">
+            <div class="row">
+                <div class="col-6">
+                    <h3 class="card-title" style="font-family:'Times New Roman'">Thông tin phòng @ViewBag.rooms</h3>
+                </div>
+                <div class="col-2">
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#exampleModal11" style="float:right">
+                        Chuyển phòng
+                    </button>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModal11" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Chọn phòng trống</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                @foreach (var i in Model)
+                                {
+                                    using (Html.BeginForm("ChangeRoom", "RoomDiagram", new { idRoom = i.RoomID }))
+                                    {
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <label for="danhmuc">Danh sách phòng trống</label>
+                                                <select class="form-control" id="danhmuc" name="changeroom">
+                                                    @Html.Action("ChangeRoomList", "RoomDiagram")
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-danger" data-dismiss="modal">Đóng</button>
+                                            <button type="submit" class="btn btn-primary">Chuyển phòng</button>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-2">
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#exampleModal1" style="float:right">
+                        Gia Hạn
+                    </button>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Gia Hạn</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                @foreach (var i in Model)
+                                {
+                                    using (Html.BeginForm("renewCheckout", "RoomDiagram", new { id = i.RoomID, url = Request.Url.ToString() }))
+                                    {
+                                        <div class="modal-body">
+                                            <label for="checkout">Ngày Gia Hạn</label>
+                                            <div class="form-floating date" id="date4" data-target-input="nearest">
+                                                <input type="number" class="form-control " name="checkout" />
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-danger" data-dismiss="modal">Đóng</button>
+                                            <button type="submit" class="btn btn-primary">Gia hạn</button>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-2">
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" style="float:right">
+                        Thanh toán
+                    </button>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Thông tin thanh toán</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                @foreach (var i in Model)
+                                {
+                                    using (Html.BeginForm("Payment", "Payment", new { roomid = i.RoomID }))
+                                    {
+                                        <div class="modal-body">
+                                            <div class="wow fadeInUp" data-wow-delay="0.2s">
+                                                <div class="row g-3">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="name">Tiền phòng</label>
+                                                            <input type="text" class="form-control" id="roomfee" value="@Html.FormatValue(ViewBag.totalRoom, "{0:#,##0}")" disabled name="roomfee">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="email">Tiền dịch vụ</label>
+                                                            <input type="text" class="form-control" id="servicefee" value="@Html.FormatValue(ViewBag.totalService, "{0:#,##0}")" disabled name="servicefee">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="danhmuc">Phương thức thanh toán</label>
+                                                            <select class="form-control" id="method" name="method">
+                                                                <option value="0">Tiền mặt</option>
+                                                                <option value="1">Chuyển khoản</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="total">Tổng tiền</label>
+                                                            <input type="text" class="form-control" id="total" value="@Html.FormatValue(ViewBag.total, "{0:#,##0}")" disabled name="total">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="total">Thuế</label>
+                                                            <input id="lbTaxip" value="0" type="text" class="form-control" readonly/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="total">Giảm giá</label>
+                                                            <input type="number" id="jsDis" class="form-control" value="0" readonly/>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-danger" data-dismiss="modal">Đóng</button>
+                                            <button type="submit" class="btn btn-primary">Thanh toán</button>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="wow fadeInUp" data-wow-delay="0.2s">
+                <div class="row g-3">
+
+                    <div class="card-body">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+
+                                    <th>Họ tên</th>
+                                    <th>Email</th>
+                                    <th>CCCD</th>
+                                    <th>Phone</th>
+                                    <th>Ngày vào</th>
+                                    <th>Ngày ra dự kiến</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>@ViewBag.name</td>
+                                    <td>@ViewBag.email</td>
+                                    <td>@ViewBag.cccd</td>
+                                    <td>@ViewBag.sdt</td>
+                                    <td>@ViewBag.checkin</td>
+                                    <td>@ViewBag.checkout</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<section class="content-header">
+    <div class="row g-3">
+        <div class="col-md-6">
+            <div class="form-floating">
+                @Html.Action("Service", "RoomDiagram")
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-floating">
+
+                <section class="content-header">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="card-header">
+                                <div class="row">
+                                    <div class="col-8">
+                                        <h3 class="card-title" style="font-family:'Times New Roman'">Dịch vụ đã được thêm</h3>
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="card-tools text-right">
+                                            <a href="@Url.Action("deleteAll", "ServiceCart", new { url = Request.Url.ToString() })" class="btn btn-danger">Xóa</a>
+                                        </div>
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="card-tools text-right">
+
+                                            @foreach (var i in Model)
+                                            {
+                                                <a href="@Url.Action("OrderService", "ServiceCart", new { id = i.RoomID, url = Request.Url.ToString() })" class="btn btn-success">Lưu</a>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="wow fadeInUp" data-wow-delay="0.2s">
+                                <div class="row g-2">
+                                    <div class="col-md-12">
+                                        <div class="table-responsive">
+                                            <table class="table table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Tên Dv</th>
+                                                        <th>Giá</th>
+                                                        <th>Số lượng</th>
+                                                        <th>Cập nhập</th>
+                                                        <th>Xóa</th>
+                                                    </tr>
+                                                </thead>
+                                                @Html.Action("IndexServiceCart", "ServiceCart")
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+@foreach (var i in Model)
+{
+    @Html.Action("IndexServiceCartUsed", "RoomDiagram", new { id = i.RoomID })
+}
+
+
+<script>
+    $(function () {
+        function getTaxAnDiscount() {
+            $.ajax({
+                url: '/Settings/getTaxandDiscount',
+                type: 'GET',
+                success: function (rs) {
+                    $("#lbTax").html('Thiết lập thuế : ' + rs.jsTax[0] + '%');
+                    $("#lbTaxip").val(rs.jsTax[0]);
+
+                    var startDate = new Date(parseInt(rs.jsDis.start.substr(6)));
+                    var endDate = new Date(parseInt(rs.jsDis.end.substr(6)));
+
+                    var currentDate = new Date();
+                    if (currentDate >= startDate && currentDate <= endDate) {
+                        $("#jsDis").val(rs.jsDis.discount1);
+                    }
+                    console.log(currentDate);
+                    console.log(startDate);
+                }
+
+            })
+        }
+
+        getTaxAnDiscount()
+    });
+</script>

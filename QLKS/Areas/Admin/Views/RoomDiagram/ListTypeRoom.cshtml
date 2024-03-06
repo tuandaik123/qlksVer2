@@ -1,0 +1,10 @@
+﻿@model IEnumerable<QLKS.Models.db_RoomType>
+<div class="dropdown-menu d" aria-labelledby="dropdownMenuButton">
+    <a class="dropdown-item" href="@Url.Action("Roomdiagram","RoomDiagram")">Toàn bộ phòng</a>
+    @foreach (var i in Model)
+    {
+        <a class="dropdown-item" href="@Url.Action("FindTypeRoom", "RoomDiagram", new { id = i.id })">@i.Type</a>
+    }
+
+</div>
+

@@ -1,0 +1,162 @@
+﻿
+@{
+    ViewBag.Title = "Bookings";
+    Layout = "~/Views/Shared/PageLayout.cshtml";
+}
+@model IEnumerable<QLKS.Models.ImageTypeRoom>
+<style>
+    /* CSS styles */
+    .product-image {
+        width: 100%;
+        height: auto;
+    }
+
+    .product-image-thumbs {
+        margin-top: 20px;
+    }
+
+    .product-image-thumb {
+        display: inline-block;
+        margin-right: 5px;
+        cursor: pointer;
+    }
+
+        .product-image-thumb img {
+            width: 75.5px;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 20%;
+        }
+
+        .product-image-thumb.active img {
+            border: 2px solid #007bff;
+        }
+
+    .bor {
+        border-radius: 5%;
+    }
+</style>
+<!-- Booking Start -->
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+            <h6 class="section-title text-center text-primary text-uppercase kq">Room Booking</h6>
+            <h1 class="mb-5">@Model.First().db_RoomType.Type <span class="text-primary text-uppercase">Luxury Room</span></h1>
+        </div>
+        <div class="row g-5">
+            <div class="col-lg-6">
+                <div class="col-12 col-sm-10">
+                    <div class="col-12" style="height:300px ; width: 500px">
+                        @if (Model.Any())
+                        {
+                            <img src="~/Content/Client/img/img-Rooms/@Model.First().img" class="product-image bor" alt="Product Image">
+                        }
+                    </div>
+                    <div class="col-12 product-image-thumbs">
+                        @foreach (var img in Model)
+                        {
+                            <div class="product-image-thumb" style="height:50px ; width:75px;">
+                                <img src="~/Content/Client/img/img-Rooms/@img.img" alt="Product Image">
+                            </div>
+                        }
+                    </div>
+
+                </div>
+            </div>
+            <script>
+                // JavaScript code
+                document.addEventListener('DOMContentLoaded', function () {
+                    var mainImage = document.querySelector('.product-image');
+                    var thumbImages = document.querySelectorAll('.product-image-thumb');
+
+                    thumbImages.forEach(function (thumb) {
+                        thumb.addEventListener('click', function () {
+                            mainImage.src = thumb.querySelector('img').src;
+
+                            thumbImages.forEach(function (t) {
+                                t.classList.remove('active');
+                            });
+
+                            thumb.classList.add('active');
+                        });
+                    });
+                });
+            </script>
+            <div class="col-lg-6">
+                @using (Html.BeginForm("ChooseDate", "Extra", new { id = Model.First().db_RoomType.id }))
+                {
+                    <div class="wow fadeInUp" data-wow-delay="0.2s">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="name" placeholder="Your Name" name="name">
+                                    <label for="name">Your Name</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="email" class="form-control" id="email" placeholder="Your Email" name="email">
+                                    <label for="email">Your Email</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="cccd" placeholder="CCCD" name="cccd">
+                                    <label for="cccd">CCCD</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="tel" class="form-control" id="tel" placeholder="SĐT" name="sdt">
+                                    <label for="tel">SĐT</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating date" id="date3" data-target-input="nearest">
+                                    <input type="date" class="form-control " id="checkin" placeholder="Check In"  name="checkin" />
+                                    <label for="checkin">Check In</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating date" id="date4" data-target-input="nearest">
+                                    <input type="date" class="form-control " id="checkout" placeholder="Check Out" name="checkout" />
+                                    <label for="checkout">Check Out</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <button class="btn btn-primary w-100 py-3" type="button" onclick="validateDates()">Đặt ngay</button>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Booking.chhtml -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-datetimepicker@4.17.47/build/js/bootstrap-datetimepicker.min.js"></script>
+<script>
+    function validateDates() {
+        var name = document.getElementById('name').value;
+        var email = document.getElementById('email').value;
+        var cccd = document.getElementById('cccd').value;
+        var tel = document.getElementById('tel').value;
+        var checkinDate = new Date(document.getElementById('checkin').value);
+        var checkoutDate = new Date(document.getElementById('checkout').value);
+
+        if (!name || !email || !cccd || !tel || !checkinDate || !checkoutDate) {
+            alert('Vui lòng điền đầy đủ thông tin.');
+        } else if (checkinDate < new Date()) {
+            alert('Ngày nhận phòng phải lớn hơn hoặc bằng ngày hiện tại.');
+        } else if (checkinDate >= checkoutDate) {
+            alert('Ngày nhận phòng phải nhỏ hơn ngày trả phòng.');
+        } else {
+            // Nếu tất cả thông tin hợp lệ, thì submit form
+            document.forms[0].submit();
+        }
+    }
+</script>

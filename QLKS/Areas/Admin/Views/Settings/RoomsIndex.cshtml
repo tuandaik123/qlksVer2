@@ -1,0 +1,293 @@
+﻿﻿
+@{
+    ViewBag.Title = "RoomsIndex";
+    Layout = "~/Areas/Admin/Views/Shared/LayoutAdmin.cshtml";
+}
+@model IEnumerable<QLKS.Models.db_Room>
+<style>
+    .c {
+        margin-bottom: 20px;
+    }
+</style>
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Thiết lập Phòng</h1>
+            </div>
+            <div class="col-sm-6">
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+<section class="content">
+    <div class="row">
+        <div class="col-lg-2 col-sm-4">
+            <div class="dropdown c">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Chọn Theo Tầng
+                </button>
+                <div class="dropdown-menu d" id="dropFloor" aria-labelledby="dropdownMenuButton">
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-2 col-sm-4">
+            <div class="dropdown c">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Chọn Theo Loại Phòng
+                </button>
+                <div class="dropdown-menu d" id="dropType" aria-labelledby="dropdownMenuButton">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Đóng row ở đây -->
+    <!-- Default box -->
+    <!-- Default box -->
+    <div class="container">
+        <div class="card">
+
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-6">
+                        <h3 class="card-title" style="font-family:'Times New Roman'">Danh sách phòng</h3>
+                    </div>
+                    <div class="col-6">
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" style="float:right">
+                            Thêm phòng
+                        </button>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Nhập thông tin phòng mới</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    @using (Html.BeginForm("addRooms", "Settings", new { url = Request.Url.ToString() }))
+                                    {
+                                        <div class="modal-body">
+                                            <input type="hidden" id="exId" value="0" name="exId" />
+                                            <div class="wow fadeInUp" data-wow-delay="0.2s">
+                                                <div class="row g-3">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="name">Số phòng</label>
+                                                            <input type="number" class="form-control" id="idRoom" name="numberR">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="email">Số người</label>
+                                                            <input type="number" class="form-control" id="slotRoom" name="slotRoom">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="danhmuc">Trạng thái hoạt động</label>
+                                                            <select class="form-control" id="active" name="active">
+                                                                <option value="0">Bảo trì</option>
+                                                                <option value="1">Hoạt động</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="danhmuc">Trạng thái phòng</label>
+                                                            <select class="form-control" id="method" name="status">
+                                                                <option value="1">Trống</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="danhmuc">Tầng</label>
+                                                            <select class="form-control" id="selectFloor" name="floor">
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="danhmuc">Loại phòng</label>
+                                                        <select class="form-control" id="selectType" name="type">
+                                                        </select>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-danger" id="btnCloseModal" data-dismiss="modal">Đóng</button>
+                                            <button type="submit" id="btnSubmit" class="btn btn-primary">Submit</button>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>STT</th>
+                                <th>Số phòng</th>
+                                <th>Slot</th>
+                                <th>Trạng thái phòng</th>
+                                <th>Trạng thái hoạt động</th>
+                                <th>Loại</th>
+                                <th>Tầng</th>
+                                <th>Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Any())
+                            {
+                                var count = 1;
+                                foreach (var i in Model)
+                                {
+                                    <tr>
+                                        <td>@count</td>
+                                        <td>@i.RoomNumber</td>
+                                        <td>@i.Slot</td>
+
+                                        <td>@((i.RoomStatus == 0) ? "Đang có khách" : "Trống")</td>
+                                        <td>@((i.ActiveStatus == 0) ? "Bảo trì" : "Hoạt động")</td>
+                                        <td>@i.db_RoomType.Type</td>
+                                        <td>@i.db_Floor.Floor</td>
+                                        <td>
+                                            <a href="#" data-id="@i.RoomID" class="btn btn-warning btnEdit"><i class="fa fa-pen-fancy"></i></a>
+                                            <a href="@Url.Action("deleteRooms","Settings", new {id = i.RoomID , url = Request.Url.ToString()})" class="btn btn-danger">
+                                                <i class="fa fa-trash"></i>
+                                            </a>
+                                        </td>
+
+                                    </tr>
+                                    count++;
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="4">Không có bản ghi!!!</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+  $(function () {
+    function load() {
+        $.ajax({
+            url: '/Settings/TypeAndFloor',
+            type: 'GET',
+            success: function (rs) {
+                var html = "";
+                var item = rs.floor;
+                for (let i = 0; i < rs.floorCount; i++) {
+                    var url = '@Url.Action("RoomsIndex", "Settings", new { floor = "TYPE_VALUE", type = 0 })'.replace("TYPE_VALUE", item[i].Id);
+                    html += "<a class=\"dropdown-item\" href=\"" + url + "\">Tầng : " + item[i].floor + "</a>";
+                }
+                $('#dropFloor').html(html);
+
+                var item1 = rs.type;
+                var html1 = "";
+                for (let i = 0; i < rs.typeCount; i++) {
+                    var url = '@Url.Action("RoomsIndex", "Settings", new { type = "TYPE_VALUE", floor = 0 })'.replace("TYPE_VALUE", item1[i].Id);
+                    html1 += "<a class=\"dropdown-item\" href=\"" + url + "\">" + item1[i].type + "</a>";
+                }
+                $('#dropType').html(html1);
+
+                var html2 = "";
+                for (let i = 0; i < rs.floorCount; i++) {
+                    html2 += " <option value=" + item[i].Id + ">Tầng : " + item[i].floor + "</option>";
+                }
+                $('#selectFloor').html(html2);
+                var html3 = "";
+                for (let i = 0; i < rs.typeCount; i++) {
+                    html3 += " <option value=" + item1[i].Id + ">" + item1[i].type + "</option>";
+                }
+                $('#selectType').html(html3)
+            }
+        });
+      }
+      $('body').on('click', '.btnEdit', function () {
+          var id = $(this).data('id');
+          updateRooms(id);
+      });
+
+      function updateRooms(id) {
+          $.ajax({
+              url: '/Settings/updateRooms',
+              type: 'GET',
+              data: { id: id },
+              success: function (rs) {
+                  if (rs.Data != null) {
+                      var i = rs.Data[0]
+                      $('#idRoom').val(i.roomId);
+                      $('#slotRoom').val(i.slot);
+                      $('#exId').val(i.ID);
+                      $('#active').val(i.active);
+                      $('#selectFloor').val(i.floor);
+                      $('#selectType').val(i.type);
+                      $('#exampleModal').modal('show');
+                  }
+              }
+          });
+      }
+      load();
+  });
+
+</script>
+<script>
+
+    $(document).ready(function () {
+        $("#btnSubmit").on("click", function (event) {
+            var id = $("#idRoom").val();
+            var slot = $('#slotRoom').val();
+            if (id === "" || slot === "") {
+                alert('Vui lòng nhập đủ thông tin');
+                event.preventDefault();
+                return;
+            }
+            $(this).closest("form").submit();
+        });
+        function closeEditModal() {
+            $('#exampleModal').modal('hide');
+        }
+
+        function resetFormFields() {
+            $('#idRoom').val('');
+            $('#slotRoom').val('');
+            $('#exId').val('0');
+            $('#active').val($('#active option:first').val());
+            $('#selectFloor').val($('#selectFloor option:first').val());
+            $('#selectType').val($('#selectType option:first').val());
+        }
+
+        $('#exampleModal').on('hidden.bs.modal', function () {
+            resetFormFields();
+        });
+
+        $('#btnCloseModal').on('click', function () {
+            closeEditModal();
+        });
+
+        updateRooms();
+
+    });
+
+</script>

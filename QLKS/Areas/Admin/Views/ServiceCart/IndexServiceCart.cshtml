@@ -1,0 +1,68 @@
+﻿@model IEnumerable<QLKS.Models.ServiceCart>
+
+                                @if (Model != null && Model.Any())
+                                {
+                                    <tbody>
+                                        @foreach (var i in Model)
+                                        {
+                                            <tr>
+                                                <td>@i.sName</td>
+                                                <td>@Html.FormatValue(i.price, "{0:#,##0}")</td>
+                                                @using (Html.BeginForm("UpdateServiceCart", "ServiceCart" , new {ms = i.iServiceId , url = Request.Url.ToString()}))
+                                                {
+
+                                                <td><input type="number" name="txtSoLuong" value="@i.quantity" class="ip" /></td>
+                                                <td>
+                                                        <button class="btn-primary bt" type="submit">ok</button>
+                                                </td>
+                                                }
+                                            <td>
+                                                <a href="@Url.Action("DeleteServiceCart","ServiceCart",new {ms = i.iServiceId , url = Request.Url.ToString()})" class="btn btn-danger">Xóa</a>
+                                            </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                }
+                                else
+                                {
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="5">Không có dịch vụ được thêm</td>
+                                        </tr>
+                                    </tbody>
+                                }
+<style>
+    .table-responsive {
+        overflow-y: auto;
+        max-height: 200px;
+    }
+
+    .ip {
+        width: 30px;
+    }
+    .bt{
+        height : 35px;
+        width:50px;
+        border-radius: 3px;
+        font-size: 20px;
+    }
+    .table th,
+    .table td {
+        text-align: center;
+        font-size: 12px;
+    }
+    .add-to-cart-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 6px 10px;
+        font-size: 14px;
+        text-align: center;
+        text-decoration: none;
+        cursor: pointer;
+        border: none;
+        background-color: #f90;
+        color: #fff;
+        border-radius: 50%;
+    }
+</style>
