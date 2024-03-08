@@ -17,7 +17,6 @@ namespace QLKS.Areas.Admin.Controllers
         {
             data = DBconnection.GetConnect();
         }
-
         [CheckSession]
         public ActionResult Index(int id = 0)
         {
@@ -27,11 +26,20 @@ namespace QLKS.Areas.Admin.Controllers
             }
             return View(data.BookingsOnlines.Where(x => x.status == 1).ToList());
         }
-
+        private void Check()
+        {
+            db_User check = Session["admin"] as db_User;
+            if (check != null && check.qlKS == 0)
+            {
+                throw new HttpException(404, "Not Found");
+            }
+        }
 
         [CheckSession]
         public ActionResult check(int id, string url)
         {
+            Check();
+
             var i = data.BookingsOnlines.SingleOrDefault(x => x.id == id);
             i.Verification = 1;
             data.SubmitChanges();
@@ -41,6 +49,8 @@ namespace QLKS.Areas.Admin.Controllers
         [CheckSession]
         public ActionResult receive(int id, string url)
         {
+            Check();
+
             var i = data.BookingsOnlines.SingleOrDefault(x => x.id == id);
             i.status = 1;
             data.SubmitChanges();

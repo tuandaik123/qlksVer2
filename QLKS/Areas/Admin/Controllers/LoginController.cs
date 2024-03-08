@@ -34,18 +34,7 @@ namespace QLKS.Areas.Admin.Controllers
             if (userEntity != null)
             {
                 Session["admin"] = userEntity;
-                if (userEntity.qlKS == 1)
-                {
-                    return RedirectToAction("Roomdiagram", "RoomDiagram");
-                }
-                else if(userEntity.qlWeb == 1) 
-                {
-                    return RedirectToAction("", "");
-                }
-                else if (userEntity.qlThongKe == 1)
-                {
-                    return RedirectToAction("Index", "Turnover");
-                }
+                    return RedirectToAction("Index", "HomeAdmin");
             }
 
             ViewBag.msg = "Sai tài khoản hoặc mật khẩu";

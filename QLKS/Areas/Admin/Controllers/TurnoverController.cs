@@ -17,15 +17,27 @@ namespace QLKS.Areas.Admin.Controllers
         {
             data = DBconnection.GetConnect();
         }
+        private void Check()
+        {
+            db_User check = Session["admin"] as db_User;
+            if (check != null && check.qlThongKe == 0)
+            {
+                throw new HttpException(404, "Not Found");
+            }
+        }
         [CheckSession]               
         public ActionResult Index()
         {
+            Check();
+
             return View();
         }
 
         [CheckSession]
         public ActionResult GetTotalPaymentByMonth()
         {
+            Check();
+
             var payments = data.db_Payments.ToList();
 
             var result = payments
@@ -49,6 +61,8 @@ namespace QLKS.Areas.Admin.Controllers
         [CheckSession]
         public ActionResult getYear()
         {
+            Check();
+
             var distinctYears = data.db_Payments.Select(x => x.PaymentDate.Year).Distinct();
             return Json(new { Data = distinctYears, Total = distinctYears.Count() }, JsonRequestBehavior.AllowGet);
         }
@@ -56,6 +70,8 @@ namespace QLKS.Areas.Admin.Controllers
         [CheckSession]
         public ActionResult GetTotalPaymentByDay()
         {
+            Check();
+
             var payments = data.db_Payments.ToList();
 
             var result = payments
@@ -85,6 +101,9 @@ namespace QLKS.Areas.Admin.Controllers
         [CheckSession]
         public ActionResult Today()
         {
+            Check();
+
+
             DateTime date = DateTime.UtcNow.Date;
             var bk = data.db_Bookings.Where(x => x.CheckInDate == date).Count();
             var revenueToday = data.db_Payments.Where(x => x.PaymentDate.Date == date)

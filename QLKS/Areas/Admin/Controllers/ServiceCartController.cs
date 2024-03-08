@@ -15,9 +15,18 @@ namespace QLKS.Areas.Admin.Controllers
         {
             data = DBconnection.GetConnect();
         }
-
+        private void Check()
+        {
+            db_User check = Session["admin"] as db_User;
+            if (check != null && check.qlKS == 0)
+            {
+                throw new HttpException(404, "Not Found");
+            }
+        }
         public List<ServiceCart> GetServiceCart()
         {
+            Check();
+
             List<ServiceCart> lst = Session["ServiceCart"] as List<ServiceCart>;
             if (lst == null)
             {
@@ -28,12 +37,15 @@ namespace QLKS.Areas.Admin.Controllers
         }
         public ActionResult IndexServiceCart()
         {
+
             List<ServiceCart> lst = GetServiceCart();
             return PartialView(lst);
         }
 
         public ActionResult AddServiceCart(int ms, string url)
         {
+            Check();
+
             List<ServiceCart> lst = GetServiceCart();
             ServiceCart gh = lst.Find(n => n.iServiceId == ms);
 
@@ -52,6 +64,9 @@ namespace QLKS.Areas.Admin.Controllers
 
         public ActionResult UpdateServiceCart(int ms, FormCollection f, string url)
         {
+            Check();
+
+
             List<ServiceCart> lstGioHang = GetServiceCart();
             ServiceCart sp = lstGioHang.SingleOrDefault(n => n.iServiceId == ms);
             if (sp != null)
@@ -62,6 +77,9 @@ namespace QLKS.Areas.Admin.Controllers
         }
         public ActionResult DeleteServiceCart(int ms, string url)
         {
+            Check();
+
+
             List<ServiceCart> lst = GetServiceCart();
             ServiceCart sp = lst.SingleOrDefault(n => n.iServiceId == ms);
             if (sp != null)
@@ -76,6 +94,8 @@ namespace QLKS.Areas.Admin.Controllers
         }
         private int TotalPrice()
         {
+            Check();
+
             int tt = 0;
             List<ServiceCart> lst = Session["ServiceCart"] as List<ServiceCart>;
             if (lst != null)
@@ -86,6 +106,8 @@ namespace QLKS.Areas.Admin.Controllers
         }
         public ActionResult OrderService(int id, string url)
         {
+            Check();
+
             List<ServiceCart> lst = GetServiceCart();
             var bk = data.db_Bookings.SingleOrDefault(x => x.RoomID == id && x.status == 0);
             foreach (var gioHangItem in lst)
@@ -106,6 +128,8 @@ namespace QLKS.Areas.Admin.Controllers
 
         public ActionResult deleteAll(string url)
         {
+            Check();
+
             Session["ServiceCart"] = null;
             return Redirect(url);
         }

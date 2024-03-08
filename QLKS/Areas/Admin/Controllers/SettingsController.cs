@@ -18,14 +18,26 @@ namespace QLKS.Areas.Admin.Controllers
         {
             data = DBconnection.GetConnect();
         }
+        private void Check()
+        {
+            db_User check = Session["admin"] as db_User;
+            if (check != null && check.qlSetting == 0)
+            {
+                throw new HttpException(404, "Not Found");
+            }
+        }
         public ActionResult Index()
         {
+            Check();
+
             return View();
         }
 
         [HttpPost]
         public ActionResult settingsTax(string url , FormCollection f)
         {
+            Check();
+
             int tax = int.Parse(f["tax"]);
             var i = data.db_Taxes.Single(x => x.id == 1);
             i.tax = tax;
@@ -36,6 +48,9 @@ namespace QLKS.Areas.Admin.Controllers
         [HttpPost]
         public ActionResult settingsDiscount(string url , FormCollection f)
         {
+            Check();
+
+
             var name = f["name"];
             DateTime end = DateTime.Parse(f["end"]).Date;
             DateTime start = DateTime.Parse(f["start"]).Date;
@@ -51,6 +66,8 @@ namespace QLKS.Areas.Admin.Controllers
 
         public ActionResult getTaxandDiscount()
         {
+            Check();
+
             var i = data.db_Taxes.Select(x => x.tax);
             var z = data.Discounts.SingleOrDefault(x => x.id == 1);
             return Json(new {jsTax = i , jsDis = z}, JsonRequestBehavior.AllowGet);
@@ -58,6 +75,9 @@ namespace QLKS.Areas.Admin.Controllers
 
         public ActionResult RoomsIndex(int? type = 0, int? floor = 0)
         {
+            Check();
+
+
             if (type != 0)
             {
                 return View(data.db_Rooms.Where(x => x.idroomtype == type));
@@ -73,6 +93,9 @@ namespace QLKS.Areas.Admin.Controllers
 
         public ActionResult TypeAndFloor()
         {
+            Check();
+
+
             var f = data.db_Floors.Select(x => new { Id = x.id, floor = x.Floor }).ToList();
             var t = data.db_RoomTypes.Select(x => new { Id = x.id, type = x.Type }).ToList();
             return Json(new {floor = f , floorCount = f .Count, type = t, typeCount =t.Count}, JsonRequestBehavior.AllowGet);
@@ -81,6 +104,9 @@ namespace QLKS.Areas.Admin.Controllers
         [HttpPost]
         public ActionResult addRooms(FormCollection f , string url)
         {
+            Check();
+
+
             int id = int.Parse(f["exId"]);
             int numberR = int.Parse(f["numberR"]);
             int slot = int.Parse(f["slotRoom"]);
@@ -116,6 +142,8 @@ namespace QLKS.Areas.Admin.Controllers
 
         public ActionResult deleteRooms(int id , string url)
         {
+            Check();
+
             data.db_Rooms.DeleteOnSubmit(data.db_Rooms.SingleOrDefault(x => x.RoomID == id));
             data.SubmitChanges();
             return Redirect(url);
@@ -123,6 +151,7 @@ namespace QLKS.Areas.Admin.Controllers
 
         public ActionResult updateRooms(int id)
         {
+
             var i = data.db_Rooms.Where(x => x.RoomID == id).Select(
                 x => new {ID = x.RoomID , roomId = x.RoomNumber , slot = x.Slot , status = x.RoomStatus , active = x.ActiveStatus , 
                 floor = data.db_Floors.Where(y => y.id == x.floorID).Select(y => y.id) , 
@@ -132,13 +161,17 @@ namespace QLKS.Areas.Admin.Controllers
 
         public ActionResult TypeRoomIndex()
         {
+            Check();
+
             var i = data.db_RoomTypes.ToList();
             return View(i);
         }
 
         [HttpPost]
-        public ActionResult addTypeRoom(FormCollection f, HttpPostedFileBase imageMain, HttpPostedFileBase[] imageExtra) 
+        public ActionResult addTypeRoom(FormCollection f, HttpPostedFileBase imageMain, HttpPostedFileBase[] imageExtra)
         {
+            Check();
+
             int id = int.Parse(f["exId"]);
             var type = f["nameR"];
             int per = int.Parse(f["perOnnight"]);
@@ -231,6 +264,9 @@ namespace QLKS.Areas.Admin.Controllers
 
         public ActionResult DeleteTypeRoom(int id, string url)
         {
+            Check();
+
+
             var imagesToDelete = data.ImageTypeRooms.Where(x => x.idType == id).ToList();
             foreach (var image in imagesToDelete)
             {
@@ -251,6 +287,9 @@ namespace QLKS.Areas.Admin.Controllers
 
         public ActionResult updateTypeRoom(int id)
         {
+            Check();
+
+
             var t = data.db_RoomTypes.Where(x => x.id == id).Select(x => new
             {
                 Id = x.id,
@@ -274,11 +313,16 @@ namespace QLKS.Areas.Admin.Controllers
         //Floor
         public ActionResult FloorIndex()
         {
+            Check();
+
             return View(data.db_Floors.ToList());
         }
 
         public ActionResult addFloor(FormCollection f , string url)
         {
+            Check();
+
+
             var floor = Int32.Parse(f["floor"]);
             int id = int.Parse(f["exId"]);
             if (id == 0)
@@ -301,6 +345,8 @@ namespace QLKS.Areas.Admin.Controllers
 
         public ActionResult deleteFloor(int id , string url)
         {
+            Check();
+
             var i = data.db_Floors.SingleOrDefault(x => x.id == id);
             data.db_Floors.DeleteOnSubmit(i);
             data.SubmitChanges();
@@ -309,6 +355,9 @@ namespace QLKS.Areas.Admin.Controllers
 
         public ActionResult updateFloor(int id)
         {
+            Check();
+
+
             var i = data.db_Floors.Where(x => x.id == id).Select(x => new
             {
                 id = x.id,

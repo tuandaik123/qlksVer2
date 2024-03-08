@@ -19,10 +19,19 @@ namespace QLKS.Areas.Admin.Controllers
         {
             data = DBconnection.GetConnect();
         }
-        
+        private void Check()
+        {
+            db_User check = Session["admin"] as db_User;
+            if (check != null && check.qlKS == 0)
+            {
+                throw new HttpException(404, "Not Found");
+            }
+        }
+
         [CheckSession]
         public ActionResult Roomdiagram()
         {
+            Check();
             var rooms = data.db_Rooms.Where(x=>x.ActiveStatus == 1).ToList();
             List<db_Room> availableRooms = new List<db_Room>();
 
@@ -48,30 +57,40 @@ namespace QLKS.Areas.Admin.Controllers
 
         public ActionResult ListFloor()
         {
+            Check();
+
             var floors = data.db_Floors.ToList();
             return PartialView(floors);
         }
 
         public ActionResult FindFloor(int id)
         {
+            Check();
+
             var floors = data.db_Rooms.Where(x => x.floorID == id).ToList();
             return PartialView(floors);
         }
 
         public ActionResult ListTypeRoom()
         {
+            Check();
+
             var floors = data.db_RoomTypes.ToList();
             return PartialView(floors);
         }
 
         public ActionResult FindTypeRoom(int id)
         {
+            Check();
+
             var rooms = data.db_Rooms.Where(x =>x.idroomtype == id).ToList();
             return PartialView(rooms);
         }
 
         public ActionResult SelectRooms(int id)
         {
+            Check();
+
             var inf = data.db_Bookings.SingleOrDefault(x => x.RoomID == id && x.status == 0);
             var room = data.db_Rooms.SingleOrDefault(x => x.RoomID == inf.RoomID);
             var ctm = data.Custommers.SingleOrDefault(x => x.CustomerID == inf.CustomerID);
@@ -121,6 +140,8 @@ namespace QLKS.Areas.Admin.Controllers
         [CheckSession]
         public ActionResult SelectRoomsEmpty(int id)
         {
+            Check();
+
             var rooms = data.db_Rooms.SingleOrDefault(x => x.RoomID == id);
             return View(rooms);
 
@@ -130,6 +151,8 @@ namespace QLKS.Areas.Admin.Controllers
         [HttpPost]
         public ActionResult BookingOffline(int id , FormCollection f)
         {
+            Check();
+
             DateTime checkout = DateTime.Parse(f["checkout"]);
             var name = f["name"];
             var email = f["email"];
@@ -163,6 +186,8 @@ namespace QLKS.Areas.Admin.Controllers
         [CheckSession]
         public ActionResult IndexServiceCart(int id)
         {
+            Check();
+
             var bk = data.db_Bookings.SingleOrDefault(x => x.RoomID == id && x.status == 0);
             var lst = data.db_RoomServices.Where(x => x.BookingID == bk.BookingID && x.status == 1).ToList();
             return PartialView(lst);
@@ -171,12 +196,16 @@ namespace QLKS.Areas.Admin.Controllers
         [CheckSession]
         public ActionResult Service()
         {
+            Check();
+
             return PartialView(data.db_Services.ToList());
         }
 
         [CheckSession]
         public ActionResult IndexServiceCartUsed(int id)
         {
+            Check();
+
             var bk = data.db_Bookings.SingleOrDefault(x => x.RoomID == id && x.status == 0);
             var lst = data.db_RoomServices.Where(x => x.BookingID == bk.BookingID && x.status == 1).ToList();
             return PartialView(lst);
@@ -185,6 +214,8 @@ namespace QLKS.Areas.Admin.Controllers
         [CheckSession]
         public ActionResult renewCheckout(int id , FormCollection f , string url)
         {
+            Check();
+
             int checkout = int.Parse(f["checkout"]);
             var bk = data.db_Bookings.SingleOrDefault(x => x.RoomID == id && x.status == 0);
             bk.CheckOutDate = bk.CheckOutDate?.AddDays(checkout);
@@ -194,6 +225,8 @@ namespace QLKS.Areas.Admin.Controllers
 
         public ActionResult ChangeRoomList()
         {
+            Check();
+
             var bookedRooms = data.BookingsOnlines
                 .Where(r =>
                     (DateTime.Now.AddDays(1) >= r.CheckInDate && r.status == 0) ||
@@ -212,6 +245,8 @@ namespace QLKS.Areas.Admin.Controllers
         [CheckSession]
         public ActionResult ChangeRoom(int idRoom , FormCollection f)
         {
+            Check();
+
             string cr = f["changeroom"];
             int room = int.Parse(cr);
             var bk = data.db_Bookings.SingleOrDefault(x => x.RoomID == idRoom && x.status == 0);
